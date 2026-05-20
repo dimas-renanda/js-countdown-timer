@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><title>Countdown Timer</title>
+<style>
+  body{margin:0;background:linear-gradient(135deg,#1a1a2e,#16213e);color:#eee;font-family:sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;flex-direction:column;text-align:center;padding:2rem}
+  h1{font-size:2rem;margin-bottom:.5rem}
+  #target{margin:1rem 0}
+  input[type=datetime-local]{background:#1e293b;color:#e2e8f0;border:1px solid #475569;border-radius:8px;padding:.5rem 1rem;font-size:1rem}
+  .units{display:flex;gap:1.5rem;margin:2rem 0;flex-wrap:wrap;justify-content:center}
+  .unit{background:rgba(255,255,255,.1);border-radius:12px;padding:1.5rem;min-width:100px}
+  .num{font-size:3rem;font-weight:700;color:#60a5fa}
+  .label{font-size:.8rem;opacity:.6;text-transform:uppercase;letter-spacing:2px;margin-top:.3rem}
+  #msg{font-size:1.5rem;display:none}
+</style>
+</head>
+<body>
+<h1>⏳ Countdown Timer</h1>
+<div id="target">
+  <input type="datetime-local" id="dt" onchange="setTarget()">
+</div>
+<div class="units">
+  <div class="unit"><div class="num" id="d">00</div><div class="label">Days</div></div>
+  <div class="unit"><div class="num" id="h">00</div><div class="label">Hours</div></div>
+  <div class="unit"><div class="num" id="m">00</div><div class="label">Minutes</div></div>
+  <div class="unit"><div class="num" id="s">00</div><div class="label">Seconds</div></div>
+</div>
+<div id="msg">🎉 Time's up!</div>
+<script>
+let target=null;
+function pad(n){return String(n).padStart(2,'0')}
+function setTarget(){target=new Date(document.getElementById('dt').value);document.getElementById('msg').style.display='none'}
+// Default: New Year
+const ny=new Date(new Date().getFullYear()+1,0,1);
+document.getElementById('dt').value=ny.toISOString().slice(0,16);
+target=ny;
+setInterval(()=>{
+  if(!target)return;
+  const diff=target-Date.now();
+  if(diff<=0){['d','h','m','s'].forEach(id=>document.getElementById(id).textContent='00');document.getElementById('msg').style.display='block';return}
+  const td=Math.floor(diff/86400000),th=Math.floor((diff%86400000)/3600000),tm=Math.floor((diff%3600000)/60000),ts=Math.floor((diff%60000)/1000);
+  document.getElementById('d').textContent=pad(td);document.getElementById('h').textContent=pad(th);document.getElementById('m').textContent=pad(tm);document.getElementById('s').textContent=pad(ts);
+},1000);
+</script>
+</body></html>
